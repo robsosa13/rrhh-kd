@@ -14,7 +14,8 @@ var tipoHorario_routes= require('./routes/tipoHorario');
 var empresaHorario_routes= require('./routes/empresaHorario');
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
-//Conection db
+//Conection db MONGO 
+
 mongoose.connect('mongodb://localhost:27017/rrhh',{useUnifiedTopology: true, useNewUrlParser: true},(err,res)=>{
     if(err){
         throw err;
@@ -25,7 +26,9 @@ mongoose.connect('mongodb://localhost:27017/rrhh',{useUnifiedTopology: true, use
             console.log("Servidor corriendo en el puerto " + port);           
         });
     }
-});
+}); 
+//**Rutas API  */
+
 app.use('/api',perfilEmpleadoRoutes);
 app.use('/api',planilla_routes);
 app.use('/api',planilla_mayor_routes);
@@ -33,5 +36,5 @@ app.use('/api',empleado_planilla_routes);
 //app.use('/api',usuario_routes); 
 app.use('/api',marcaHora_routes); 
 app.use('/api',tipoHorario_routes); 
-app.use('/api',empresaHorario_routes); 
+app.use('/api',empresaHorario_routes);  
 module.exports = app;

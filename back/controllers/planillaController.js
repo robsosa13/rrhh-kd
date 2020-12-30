@@ -17,8 +17,6 @@ var controller = {
        AFP = (TOTALganado*12.71)/100;
        TOTALdescuentos=AFP+ parseInt(params.aporte_nal_solidario)+ parseInt(params.anticipos)+ parseInt(params.otros_descuentos);
        //#endregion
-      
-       
         planilla.idPlanillaMayor=params.idPlanillaMayor;
         planilla.idEmpleadoPlanilla=params.idEmpleadoPlanilla;
         planilla.idusuario = 'asd';//params.idusuario;
@@ -41,7 +39,6 @@ var controller = {
         planilla.total_descuentos = TOTALdescuentos;
         planilla.liquido_pagable  = TOTALganado -TOTALdescuentos ;
         planilla.minutos_retraso  = params.minutos_retraso;
-        
         planilla.save((err, planilla_result) => {
             if (err) { return res.status(500).send({ message: "Error al guardar los datos" }) }
             if (!planilla_result) { return res.status(404).send({ message: "No se guardo correctamente la planilla" }) }

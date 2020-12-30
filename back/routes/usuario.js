@@ -7,5 +7,5 @@ var express = require('express');
 // api.post('/login',UsuarioController.login);
 // api.post('/test-post',UsuarioController.postUser);
 
-
 // module.exports = api;
+
