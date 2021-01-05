@@ -28,7 +28,6 @@ mongoose.connect('mongodb://localhost:27017/rrhh',{useUnifiedTopology: true, use
     }
 }); 
 //**Rutas API  */
-
 app.use('/api',perfilEmpleadoRoutes);
 app.use('/api',planilla_routes);
 app.use('/api',planilla_mayor_routes);
