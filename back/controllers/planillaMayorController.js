@@ -1,4 +1,8 @@
 var PlanillaMayor = require('../models/planillaMayor');
+let response ={
+    msg:"",
+    exito:false
+}
 var controller = {
     registrarPlanillaMayor: function (req, res) {
         var planilla_mayor = new PlanillaMayor();
@@ -21,7 +25,10 @@ var controller = {
         planilla_mayor.ufv_final = params.ufv_final;
 
         planilla_mayor.save((err, planilla_result) => {
-            if (err) { return res.status(500).send({ message: "Error al guardar los datos" }) }
+            if (err) { return res.status(500).send({ message: "Error al guardar los datos" 
+  
+
+        }) }
             if (!planilla_result) { return res.status(404).send({ message: "No se guardo correctamente la planilla" }) }
             return res.status(200).send({ planilla_mayor: planilla_result })
         })

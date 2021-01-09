@@ -14,6 +14,14 @@ var tipoHorario_routes= require('./routes/tipoHorario');
 var empresaHorario_routes= require('./routes/empresaHorario');
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
+app.use((req,res,next)=>{
+    res.header('Content-Type: application/json');
+    res.header('Access-Control-Allow-Origin','*'); 
+    res.header('Access-Control-Allow-Headers','Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods','GET, PUT, POST, DELETE, OPTIONS');
+    res.header('Allow','GET, PUT, POST, DELETE, OPTIONS');
+    next();
+});
 //Conection db MONGO 
 
 mongoose.connect('mongodb://localhost:27017/rrhh',{useUnifiedTopology: true, useNewUrlParser: true},(err,res)=>{
