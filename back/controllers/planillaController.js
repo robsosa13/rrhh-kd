@@ -1,7 +1,9 @@
 const { response } = require('express');
 const fetch = require("node-fetch");
 var PlanillaSueldos = require('../models/planillaSueldos');
+
 var controller = {
+
     registrarPlanilla: function (req, res) {  
 
         var planilla = new PlanillaSueldos();
@@ -109,4 +111,5 @@ var controller = {
      }).catch(err=>console.log(err))
     }
 }
+
 module.exports = controller;

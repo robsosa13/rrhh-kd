@@ -49,12 +49,14 @@ function eliminarTipoHorario(req,res){
             res.status(200).send({tipoHorario:tipo_deleted});
         }else{
             res.status(500).send(err);
+            test()
         }
     })
+}
+function test (){
+
 }
 
 module.exports = {
     registrarMarcaHora,
-
-  
 }
