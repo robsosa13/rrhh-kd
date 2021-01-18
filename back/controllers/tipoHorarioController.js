@@ -18,6 +18,7 @@ function registrarTipoHorario(req,res){
 }
 function listarTipoHorario(req,res){
     TipoHorario.find((err,tipoHorario)=>{
+        
         if(clientes_data){
             res.status(200).send({tipoHorario: tipoHorario});
         }else{

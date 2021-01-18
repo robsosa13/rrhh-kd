@@ -22,13 +22,13 @@ function registrarEmpleadoPlanilla(req, res) {
 }
 function getEmpleadoPlanilla(req, res) {
 
-    EmpleadoPlanilla.find({}).exec((err, planillas) => {
+    EmpleadoPlanilla.find({}).exec((err, empleadoP) => {
         if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
-        if (!planillas) { return res.status(404).send({ message: 'No hay planillas' }); }
-        return res.status(200).send({ planillas });
+        if (!empleadoP) { return res.status(404).send({ message: 'No hay empleadoP' }); }
+        return res.status(200).send({ empleadoP });
     })
 }
 
-module.exports = {
+module.exports = { 
     registrarEmpleadoPlanilla,getEmpleadoPlanilla
 }
