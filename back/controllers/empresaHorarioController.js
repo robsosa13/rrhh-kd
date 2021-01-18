@@ -133,4 +133,4 @@ function eliminarTipoHorario(req,res){
 }
 module.exports = {  
     registrarEmpresaHorarioCalendario,
-    get_Empresa_horario_calendario}  
+    get_Empresa_horario_calendario,eliminarTipoHorario,editarTipoHorario,listarTipoHorario,get_HorarioById}  
