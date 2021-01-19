@@ -35,7 +35,7 @@ var controller = {
     },
     getPlanilla_mayor: function (req, res) {
         PlanillaMayor.find({}).exec((err, planillas) => {
-            console.log(planillas)
+           
             if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
             if (!planillas) { return res.status(404).send({ message: 'No hay planillas' }); }
             return res.status(200).send({planillas   });

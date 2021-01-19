@@ -8,14 +8,19 @@ var controller = {
 
         var planilla = new PlanillaSueldos();
         var params = req.body;
-        var AFP =0,descuentosPOrRetraso =0,descuento_retraso =0,PagoDiasTrabajados =0,TOTALganado=0;
+        var AFP =0,descuentosPOrRetraso =0,descuento_retraso =0,PagoDiasTrabajados =0,TOTALganado=0,IMPORTEHorasExtras=0;
          //Total dias pagados
        //#region CALCULOS
+        if(params.horas_extras==0 ||params.horas_extras ==null){
+            IMPORTEHorasExtras=0;
+        }else{
+            IMPORTEHorasExtras = ((((params.haber_basico/30) /8)*2)*params.horas_extras);
+        }
        PagoDiasTrabajados = ((params.haber_basico /30)*params.dias_pagados);
        descuento_retraso = ((((params.total_ganado/30)/100)/8)/60);
        descuentosPOrRetraso= descuento_retraso*params.minutos_retraso;
        TOTALganado = parseInt(params.haber_basico)+ parseInt(params.otros_bonos) + parseInt(params.bono_produccion)+
-       parseInt(params.importe_horas_extras)+  parseInt(params.bono_antiguedad )+ parseInt(PagoDiasTrabajados);
+       parseInt(IMPORTEHorasExtras)+  parseInt(params.bono_antiguedad );
        AFP = (TOTALganado*12.71)/100;
        TOTALdescuentos=AFP+ parseInt(params.aporte_nal_solidario)+ parseInt(params.anticipos)+ parseInt(params.otros_descuentos);
        //#endregion
@@ -29,7 +34,7 @@ var controller = {
         planilla.total_dias_pagados = PagoDiasTrabajados;
         planilla.bono_antiguedad = params.bono_antiguedad;
         planilla.horas_extras = params.horas_extras;
-        planilla.importe_horas_extras = params.importe_horas_extras;
+        planilla.importe_horas_extras = IMPORTEHorasExtras;
         planilla.bono_produccion = params.bono_produccion;
         planilla.otros_bonos = params.otros_bonos;
         planilla.total_ganado = TOTALganado;

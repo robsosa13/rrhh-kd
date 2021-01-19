@@ -8,11 +8,9 @@ function registrarMarcaHora(req,res){
     marcaHora.marcaH2 = data.marcaH2;
     marcaHora.marcaH3 = data.marcaH3;
     marcaHora.marcaH4 = data.marcaH4;
-    marcaHora.fecha=  new Date(data.fecha); 
-    console.log(data.fecha)
-
     marcaHora.save((err,marcaHora_save)=>{
         if(marcaHora_save){
+            console.log(marcaHora_save)
             res.status(200).send({marcaHora: marcaHora_save});
         }else{
             res.status(500).send(err);
@@ -52,9 +50,6 @@ function eliminarTipoHorario(req,res){
             test()
         }
     })
-}
-function test (){
-
 }
 
 module.exports = {
