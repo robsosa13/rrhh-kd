@@ -2,12 +2,27 @@ var MarcaHora = require('../models/marcaHora');
 function registrarMarcaHora(req,res){
     let data = req.body;
     var marcaHora = new MarcaHora();
+    var marcah1=new Date(),marcah2=new Date(),marcah3=new Date(),marcah4=new Date();
+
+    var fecha1 = marcah1.getDate() + '-' + ( marcah1.getMonth() + 1 ) + '-' + marcah1.getFullYear();
+    var fecha2 = marcah2.getDate() + '-' + ( marcah2.getMonth() + 1 ) + '-' + marcah2.getFullYear();
+    var fecha3 = marcah3.getDate() + '-' + ( marcah3.getMonth() + 1 ) + '-' + marcah3.getFullYear();
+    var fecha4 = marcah4.getDate() + '-' + ( marcah4.getMonth() + 1 ) + '-' + marcah4.getFullYear();
+    var HORA1 = marcah1.getHours() + '(Hr.)' + ( marcah1.getMinutes() ) + '(Min.)' + marcah1.getSeconds()+'(Seg.)' ;
+    var HORA2 = marcah2.getHours() + '(Hr.)' + ( marcah2.getMinutes() ) + '(Min.)' + marcah2.getSeconds()+'(Seg.)';
+    var HORA3 = marcah3.getHours() + '(Hr.)' + ( marcah3.getMinutes() ) + '(Min.)' + marcah3.getSeconds()+'(Seg.)';
+    var HORA4 = marcah4.getHours() + '(Hr.)' + ( marcah4.getMinutes()  ) +'(Min.)' + marcah4.getSeconds()+'(Seg.)';
+
+    var fechaHora1 = HORA1
+    var fechaHora2 = HORA2
+    var fechaHora3 = HORA3
+    var fechaHora4 = HORA4
     marcaHora.idEmpleado = data.idEmpleado;
     marcaHora.idEmpresa = data.idEmpresa;
-    marcaHora.marcaH1 = data.marcaH1;
-    marcaHora.marcaH2 = data.marcaH2;
-    marcaHora.marcaH3 = data.marcaH3;
-    marcaHora.marcaH4 = data.marcaH4;
+    marcaHora.marcaH1 = fechaHora1;
+    marcaHora.marcaH2 = fechaHora2;
+    marcaHora.marcaH3 = fechaHora3;
+    marcaHora.marcaH4 = fechaHora4;
     marcaHora.save((err,marcaHora_save)=>{
         if(marcaHora_save){
             console.log(marcaHora_save)
@@ -17,10 +32,17 @@ function registrarMarcaHora(req,res){
         }
     });
 }
-
+function getMarcaHoraEmpleado(req,res){
+  
+    MarcaHora.find({}).exec((err, empleadoMH) => {
+        if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
+        if (!empleadoMH) { return res.status(404).send({ message: 'No hay tipoHorario' }); }
+        return res.status(200).send({ empleadoMH });
+    })
+}
 function get_HorarioById(req,res){
     var id = req.params['id'];
-    TipoHorario.findById(id,(err,res_horario)=>{
+    MarcaHora.findById(id,(err,res_horario)=>{
         if(res_horario){
             res.status(200).send({TipoHorario:res_horario});
         }
@@ -30,7 +52,7 @@ function editarTipoHorario(req,res){
     let id = req.params['id'];
     let data = req.body;
 
-    TipoHorario.findOneAndUpdate(id,{nombre: data.nombre}, (err,tipo_edit)=>{
+    MarcaHora.findOneAndUpdate(id,{nombre: data.nombre}, (err,tipo_edit)=>{
         if(tipo_edit){
             res.status(200).send({tipoHorario: tipo_edit});
         }else{
@@ -42,7 +64,7 @@ function editarTipoHorario(req,res){
 function eliminarTipoHorario(req,res){
     let id = req.params['id'];
 
-    TipoHorario.findByIdAndRemove(id,(err,tipo_deleted)=>{
+    MarcaHora.findByIdAndRemove(id,(err,tipo_deleted)=>{
         if(tipo_deleted){
             res.status(200).send({tipoHorario:tipo_deleted});
         }else{
@@ -53,5 +75,5 @@ function eliminarTipoHorario(req,res){
 }
 
 module.exports = {
-    registrarMarcaHora,
+    registrarMarcaHora,getMarcaHoraEmpleado
 }

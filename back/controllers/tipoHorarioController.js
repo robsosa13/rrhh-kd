@@ -3,12 +3,17 @@ function registrarTipoHorario(req,res){
     let data = req.body;
     var tipoHorario = new TipoHorario();
     tipoHorario.nombre = data.nombre;
-    tipoHorario.horario1 = data.horario1;
-    tipoHorario.horario2 = data.horario2;
-    tipoHorario.horario3 = data.horario3;
-    tipoHorario.horario4 = data.horario4;
-   
+    tipoHorario.horario1H = data.horario1H;
+    tipoHorario.horario1M = data.horario1M;
+    tipoHorario.horario2H = data.horario2H;
+    tipoHorario.horario2M = data.horario2M;
+    tipoHorario.horario3H = data.horario3H;
+    tipoHorario.horario3M = data.horario3M;
+    tipoHorario.horario4H = data.horario4H;
+    tipoHorario.horario4M = data.horario4M;
+
     tipoHorario.save((err,tipoH_save)=>{
+        console.log(tipoH_save)
         if(tipoH_save){
             res.status(200).send({tipoHorario: tipoH_save});
         }else{
@@ -18,8 +23,7 @@ function registrarTipoHorario(req,res){
 }
 function listarTipoHorario(req,res){
     TipoHorario.find((err,tipoHorario)=>{
-        
-        if(clientes_data){
+        if(tipoHorario){
             res.status(200).send({tipoHorario: tipoHorario});
         }else{
             res.status(403).send({message: 'No hay registros en la bd'});
@@ -28,7 +32,6 @@ function listarTipoHorario(req,res){
 }
 function get_HorarioById(req,res){
     var id = req.params['id'];
-
     TipoHorario.findById(id,(err,res_horario)=>{
         if(res_horario){
             res.status(200).send({TipoHorario:res_horario});

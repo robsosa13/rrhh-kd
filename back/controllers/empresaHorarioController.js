@@ -34,13 +34,15 @@ function registrarEmpresaHorarioCalendario(req,res){
     });
 }
 function get_Empresa_horario_calendario(req,res){
+    console.log('test')
     var id = req.params['id'];
     EmpresaHorario.findById(id).exec((err,empresa_horario)=>{
+        console.log(empresa_horario)
         if(empresa_horario){
             EmpresaHorarioCalendario.find({idEmpresaHorario:empresa_horario._id}).populate('idTipoHorario').exec({idEmpresaHorario:id},(err,result_calendario)=>{
                 if(result_calendario){
-                    // console.log(empresa_horario)
-                    // console.log(result_calendario)
+                    console.log(empresa_horario)
+                    console.log(result_calendario)
                     res.status(200).send(
                         {
                             data : {

@@ -11,7 +11,7 @@ var empleado_planilla_routes= require('./routes/empleadoPlanilla');
 var usuario_routes= require('./routes/usuario');
 var marcaHora_routes= require('./routes/marcaHora');
 var tipoHorario_routes= require('./routes/tipoHorario');
-var empresaHorario_routes= require('./routes/empresaHorario');
+var empresaHorario_routes= require('./routes/empresaHorarioCalendario');
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
 app.use((req,res,next)=>{
