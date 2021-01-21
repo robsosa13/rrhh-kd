@@ -4,6 +4,7 @@ var Schema =    mongoose.Schema;
 var EmpresaHorarioCalendario = Schema({
     idTipoHorario: { type: Schema.ObjectId, ref: 'tipoHorario' },
     idEmpresaHorario: { type: Schema.ObjectId, ref: 'empresaHorario' },
+    fecha:Date,
     dia:String
 });
 module.exports =  mongoose.model('empresaHorarioCalendario',EmpresaHorarioCalendario);

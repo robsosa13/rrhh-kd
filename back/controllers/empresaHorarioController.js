@@ -17,6 +17,7 @@ function registrarEmpresaHorarioCalendario(req,res){
                 var empresaHorarioCalendario = new EmpresaHorarioCalendario();
                 empresaHorarioCalendario.idTipoHorario =  element.idTipoHorario ;
                 empresaHorarioCalendario.dia=element.dia;
+                empresaHorarioCalendario.fecha=element.fecha;
                 empresaHorarioCalendario.idEmpresaHorario =  empresaHorario_save._id ;
                 empresaHorarioCalendario.save((err,empresaHorarioCalendario_save)=>{
                     if(empresaHorarioCalendario_save){
@@ -34,10 +35,10 @@ function registrarEmpresaHorarioCalendario(req,res){
     });
 }
 function get_Empresa_horario_calendario(req,res){
-    console.log('test')
+
     var id = req.params['id'];
     EmpresaHorario.findById(id).exec((err,empresa_horario)=>{
-        console.log(empresa_horario)
+      
         if(empresa_horario){
             EmpresaHorarioCalendario.find({idEmpresaHorario:empresa_horario._id}).populate('idTipoHorario').exec({idEmpresaHorario:id},(err,result_calendario)=>{
                 if(result_calendario){
