@@ -22,24 +22,94 @@ function registrarMarcaHora(req, res) {
     MarcaHora.find({ fechaRegistro: fecha }).exec((err, MarcaHoraEmpleado) => {
         if (MarcaHoraEmpleado) {
             if (MarcaHoraEmpleado.marcaH1) {
-            } else {
                 if (MarcaHoraEmpleado.marcaH2) {
-                } else {
-                    if (MarcaHoraEmpleado.marcaH2) {
+                    if (MarcaHoraEmpleado.marcaH3) {
+                        if (MarcaHoraEmpleado.marcaH4) {
+                            //NO ENCUENTRA ALGO Y EXISTE ALGUN ERROR
+                        } else {
+                            marcaHora.idEmpleado = data.idEmpleado;
+                            marcaHora.idEmpresa = data.idEmpresa;
+                            marcaHora.marcah4 = marcah4;
+
+                            MarcaHora.findOneAndUpdate(MarcaHoraEmpleado.id, { marcah4: data.marcah4 }, (err, tipo_edit) => {
+                                if (tipo_edit) {
+                                    //  res.status(200).send({ tipoHorario: tipo_edit });
+                                } else {
+                                    res.status(500).send(err);
+                                }
+                            })
+                        }
                     } else {
-                    } if (MarcaHoraEmpleado.marcaH2) {
+                        marcaHora.idEmpleado = data.idEmpleado;
+                        marcaHora.idEmpresa = data.idEmpresa;
+                        marcaHora.marcaH3 = marcah3;
+                        MarcaHora.findOneAndUpdate(MarcaHoraEmpleado.id, { marcaH3: data.marcaH3 }, (err, tipo_edit) => {
+                            if (tipo_edit) {
+                                //  res.status(200).send({ tipoHorario: tipo_edit });
+                            } else {
+                                res.status(500).send(err);
+                            }
+                        })
                     }
+                } else {
+                    marcaHora.idEmpleado = data.idEmpleado;
+                    marcaHora.idEmpresa = data.idEmpresa;
+                    marcaHora.marcaH2 = marcah2;
+                    MarcaHora.findOneAndUpdate(MarcaHoraEmpleado.id, { marcah2: data.marcah2 }, (err, tipo_edit) => {
+                        if (tipo_edit) {
+                            //  res.status(200).send({ tipoHorario: tipo_edit });
+                        } else {
+                            res.status(500).send(err);
+                        }
+                    })
                 }
+            } else {
+                marcaHora.idEmpleado = data.idEmpleado;
+                marcaHora.idEmpresa = data.idEmpresa;
+                marcaHora.marcaH1 = marcah1;
+                MarcaHora.findOneAndUpdate(MarcaHoraEmpleado.id, { marcah1: data.marcah1 }, (err, tipo_edit) => {
+                    if (tipo_edit) {
+                        //  res.status(200).send({ tipoHorario: tipo_edit });
+                    } else {
+                        res.status(500).send(err);
+                    }
+                })
+                //var fechaHora1 = marcah4.getHours() + '(Hr.)' + (marcah4.getMinutes()) + '(Min.)' + marcah4.getSeconds() + '(Seg.)';
+                // marcaHora.idEmpleado = data.idEmpleado;
+                // marcaHora.idEmpresa = data.idEmpresa;
+                // marcaHora.marcaH1 = fechaHora1;
+                // marcaHora.marcaH2 = fechaHora2;
+                // marcaHora.marcaH3 = fechaHora3;
+                // marcaHora.marcaH4 = fechaHora4;
+                // marcaHora.save((err, marcaHora_save) => {
+                //     if (marcaHora_save) {
+                //         //console.log(marcaHora_save)
+                //         res.status(200).send({ marcaHora: marcaHora_save });
+                //     } else {
+                //         res.status(500).send(err);
+                //     }
+                // });
             }
         }
         else {
-            console.log('NO EXISTE FECHAS')
+            marcaHora.idEmpleado = data.idEmpleado;
+            marcaHora.idEmpresa = data.idEmpresa;
+            marcaHora.marcaH1 = fechaHora1;
+           
+            marcaHora.save((err, marcaHora_save) => {
+                if (marcaHora_save) {
+                    //console.log(marcaHora_save)
+                   // res.status(200).send({ marcaHora: marcaHora_save });
+                } else {
+                    res.status(500).send(err);
+                }
+            });
         }
     })
 
-    if (f1.getTime() == f2.getTime()) {
-        console.log("Son la misma fecha");
-    }
+    // if (f1.getTime() == f2.getTime()) {
+    //     console.log("Son la misma fecha");
+    // }
     //AÑO Y MES CON LO QUE COMPARA
     EmpresaHorario.findOne({ mes: mes, anio: año }).exec((err, empleadoMH) => {
         id_calendario = empleadoMH._id
