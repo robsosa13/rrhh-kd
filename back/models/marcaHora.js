@@ -5,10 +5,10 @@ var Schema =    mongoose.Schema;
 var MarcaHora = Schema({
     idEmpleado:String,
     idEmpresa:String,
-    marcaH1:String,
-    marcaH2:String,
-    marcaH3:String,
-    marcaH4:String,
-    fechaRegistro: {type: Date, default: Date.now}
+    marcaH1:Date,
+    marcaH2:Date,
+    marcaH3:Date,
+    marcaH4:Date,
+    fechaRegistro: String
 });
 module.exports =  mongoose.model('marcahora',MarcaHora);
