@@ -24,7 +24,8 @@ var PlanillaSueldo = Schema({
     liquido_pagable:Number,
     minutos_retraso :Number ,
     idPlanillaMayor: { type: Schema.ObjectId, ref: 'planillaMayor'},
-    idEmpleadoPlanilla: { type: Schema.ObjectId, ref: 'empleadoPlanilla'}
+    idEmpleadoPlanilla: { type: Schema.ObjectId, ref: 'empleadoPlanilla'},
+   
 });
 
 module.exports =  mongoose.model('planillaSueldo',PlanillaSueldo);

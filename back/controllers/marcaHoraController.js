@@ -8,23 +8,16 @@ function registrarMarcaHora(req, res) {
 
     let data = req.body;
     var marcaHora = new MarcaHora();
-    var fechaTest
-    var marcah1 = new Date(), marcah2 = new Date(), marcah3 = new Date(), marcah4 = new Date();
-    fechaTest = new Date();
+    var fechaTest= new Date();
     var id_calendario;
-    var testdate = new Date()
+    var id_empleado = data.idEmpleado
     // var id_calendario;
     var año, dia, mes, idMarcaH;
     año = fechaTest.getFullYear()
-    mes = fechaTest.getMonth() + 1
+    mes = fechaTest.getMonth() + 1 
     dia = fechaTest.getDate();
     var mar1, mar2, mar3, mar4, idEmpleado;
-    // console.log('MES', año)
-    // console.log('AÑO', mes)
-    // console.log('DIA', dia)
     var HORA1 = fechaTest.getHours() + '(Hr.)' + (fechaTest.getMinutes()) + '(Min.)' + fechaTest.getSeconds() + '(Seg.)';
-    // console.log(HORA1)
-    // console.log(fechaTest)
     //VERIFICAR QUE HORARIO LE TOCA MARCAR
     var buscar = fechaTest.getDate() + fechaTest.getMonth() + 1 + fechaTest.getFullYear();
     MarcaHora.find({ fechaRegistro: buscar }).exec((err, MarcaHoraEmpleado) => {
@@ -44,8 +37,7 @@ function registrarMarcaHora(req, res) {
                         console.log('NO HAY MAS REGISTROS .....TERMINA')
                         //NO ENCUENTRA ALGO Y EXISTE ALGUN ERROR
                     } else {
-
-                        marcaHora.idEmpleado = data.idEmpleado;
+                        marcaHora.idEmpleado = idEmpleado;
                         marcaHora.idEmpresa = data.idEmpresa;
                         //marcaHora.marcah4 = marcah4;
 
@@ -103,6 +95,50 @@ function registrarMarcaHora(req, res) {
                                                             ///////////////////////CALCULAMOS LOS MINUTOS Y HORAS DE RETRASO MEDIO DIA //////////////////////////////
                                                             console.log('hora retraso', hora_retraso * -1)
                                                             console.log('min retraso', min_retraso)
+                                                            var sumMin ,sumHora;
+                                                            HistorialMinutosRetraso.find({ idEmpleadoPlanilla: id_empleado,mes:mes }).exec((err, resultfinal) => {
+                                                                if (err) {
+                                                                } else {
+                                                                    if (resultfinal) {
+                                                                        console.log('encontro')
+                                                                        /**
+                                                                         * SUMAMOS LOS MINUTOS MENSUALES DE RETRASO
+                                                                         */
+                                                                        for (const item in resultfinal) {
+                                                                            sumMin=min_retraso+ resultfinal[item].minutosRetraso;
+                                                                            sumHora=hora_retraso+ resultfinal[item].horasRetraso;
+                                                                            
+                                                                            
+                                                                        }
+                                                                        HistorialMinutosRetraso.findOneAndUpdate({ idEmpleadoPlanilla: id_empleado,mes:mes }, { $set: { minutosRetraso: sumMin,horasRetraso:sumHora } }, { multi: true }, (err, activo_edit) => {
+                                                                            console.log("EDITADO4 !!!!")
+                                                                        })
+                                                                    }
+                                                                    else {
+                                                                        console.log('no encontro')
+                                                                        /**
+                                                                         * 
+                                                                         */
+                
+                                                                        var historialMinutosRetraso = new HistorialMinutosRetraso();
+                                                                        historialMinutosRetraso.minutosRetraso=min_retraso
+                                                                        historialMinutosRetraso.horasRetraso=hora_retraso
+                                                                        historialMinutosRetraso.mes='1'
+                                                                        historialMinutosRetraso.año='2021'
+                                                                        historialMinutosRetraso.idEmpleadoPlanilla=id_empleado
+                                                                        historialMinutosRetraso.save((err, marcaHora_save) => {
+                                                                            if (marcaHora_save) {
+                
+                                                                                console.log("EDITADO4 !!!!")
+                                                                                //res.status(200).send({empresas:empresaLista});
+                                                                            } else {
+                
+                                                                                //res.status(403).send({message: 'No hay ningun registro con ese titulo'});
+                                                                            }
+                                                                        })
+                                                                     }
+                                                                }
+                                                            })
                                                         }
                                                         res.status(200).send({ result: result })
                                                     })
@@ -125,7 +161,7 @@ function registrarMarcaHora(req, res) {
                         });
                     }
                 } else {
-                    marcaHora.idEmpleado = data.idEmpleado;
+                    marcaHora.idEmpleado = idEmpleado;
                     marcaHora.idEmpresa = data.idEmpresa;
                     //marcaHora.marcaH3 = marcah3;
                     console.log('tesst !!!!!!!!!!!!!!!!!!!!!!!!!')
@@ -184,6 +220,48 @@ function registrarMarcaHora(req, res) {
                                                         ///////////////////////CALCULAMOS LOS MINUTOS Y HORAS DE RETRASO MEDIO DIA //////////////////////////////
                                                         console.log('hora retraso', hora_retraso * -1)
                                                         console.log('min retraso', min_retraso)
+                                                        var sumMin ,sumHora;
+                                                        HistorialMinutosRetraso.find({ idEmpleadoPlanilla: id_empleado,mes:mes }).exec((err, resultfinal) => {
+                                                            if (err) {
+                                                            } else {
+                                                                if (resultfinal) {
+                                                                    /**
+                                                                     * SUMAMOS LOS MINUTOS MENSUALES DE RETRASO
+                                                                     */
+                                                                    for (const item in resultfinal) {
+                                                                        sumMin=min_retraso+ resultfinal[item].minutosRetraso;
+                                                                        sumHora=hora_retraso+ resultfinal[item].horasRetraso;
+                                                                        
+                                                                        
+                                                                    }
+                                                                    HistorialMinutosRetraso.findOneAndUpdate({ idEmpleadoPlanilla: id_empleado,mes:mes }, { $set: { minutosRetraso: sumMin,horasRetraso:sumHora } }, { multi: true }, (err, activo_edit) => {
+                                                                        console.log("EDITADO3 !!!!")
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    /**
+                                                                     * 
+                                                                     */
+            
+                                                                    var historialMinutosRetraso = new HistorialMinutosRetraso();
+                                                                    historialMinutosRetraso.minutosRetraso=min_retraso
+                                                                    historialMinutosRetraso.horasRetraso=hora_retraso
+                                                                    historialMinutosRetraso.mes='1'
+                                                                    historialMinutosRetraso.año='2021'
+                                                                    historialMinutosRetraso.idEmpleadoPlanilla=id_empleado
+                                                                    historialMinutosRetraso.save((err, marcaHora_save) => {
+                                                                        if (marcaHora_save) {
+            
+                                                                            console.log("EDITADO3 !!!!")
+                                                                            //res.status(200).send({empresas:empresaLista});
+                                                                        } else {
+            
+                                                                            //res.status(403).send({message: 'No hay ningun registro con ese titulo'});
+                                                                        }
+                                                                    })
+                                                                 }
+                                                            }
+                                                        })
                                                     }
                                                     res.status(200).send({ result: result })
                                                 })
@@ -207,7 +285,7 @@ function registrarMarcaHora(req, res) {
                 }
             } else {
                 //console.log('entra aquiid',MarcaHoraEmpleado.marcaH1)
-                marcaHora.idEmpleado = data.idEmpleado;
+                marcaHora.idEmpleado = idEmpleado;
                 marcaHora.idEmpresa = data.idEmpresa;
                 console.log('idpa revisar', idMarcaH)
                 //marcaHora.marcaH2 = marcah2;
@@ -265,6 +343,53 @@ function registrarMarcaHora(req, res) {
                                                     ///////////////////////CALCULAMOS LOS MINUTOS Y HORAS DE RETRASO MEDIO DIA //////////////////////////////
                                                     console.log('hora retraso', hora_retraso * -1)
                                                     console.log('min retraso', min_retraso)
+                                                    var sumMin ,sumHora;
+                                                    console.log('BUSCAR',id_empleado)
+                                                    console.log('BUSCAR',mes)
+                                                    HistorialMinutosRetraso.find({ idEmpleadoPlanilla: id_empleado,mes:mes }).exec((err, resultfinal) => {
+                                                        if (err) {
+                                                        } else {
+                                                            if (resultfinal) {
+                                                                console.log('PROBANDO1 ')
+                                                                /**
+                                                                 * SUMAMOS LOS MINUTOS MENSUALES DE RETRASO
+                                                                 */
+                                                                for (const item in resultfinal) {
+                                                                    sumMin=min_retraso+ resultfinal[item].minutosRetraso;
+                                                                    sumHora=hora_retraso+ resultfinal[item].horasRetraso;
+                                                                    
+                                                                    
+                                                                }
+                                                                HistorialMinutosRetraso.findOneAndUpdate({ idEmpleadoPlanilla: id_empleado,mes:mes }, { $set: { minutosRetraso: sumMin,horasRetraso:sumHora } }, { multi: true }, (err, activo_edit) => {
+                                                                    console.log("EDITADO2 !!!!")
+                                                                })
+                                                            }
+                                                            else {
+                                                                /**
+                                                                 * 
+                                                                 */
+                                                                console.log('PROBANDO2 ')
+                                                                var historialMinutosRetraso = new HistorialMinutosRetraso();
+                                                                historialMinutosRetraso.minutosRetraso=min_retraso
+                                                                historialMinutosRetraso.horasRetraso=hora_retraso
+                                                                historialMinutosRetraso.mes='1'
+                                                                historialMinutosRetraso.año='2021'
+                                                                historialMinutosRetraso.idEmpleadoPlanilla=id_empleado
+                                                                historialMinutosRetraso.save((err, marcaHora_save) => {
+                                                                    if (marcaHora_save) {
+        
+                                                                        console.log("EDITADO2 !!!!")
+                                                                        //res.status(200).send({empresas:empresaLista});
+                                                                    } else {
+        
+                                                                        //res.status(403).send({message: 'No hay ningun registro con ese titulo'});
+                                                                    }
+                                                                })
+                                                             }
+                                                        }
+                                                    })
+                                                    
+
                                                 }
                                                 res.status(200).send({ result: result })
                                             })
@@ -299,7 +424,9 @@ function registrarMarcaHora(req, res) {
 
             var fecharegistroMarca = fechaTest.getDate() + fechaTest.getMonth() + 1 + fechaTest.getFullYear();
             //console.log('tstaa', espero)
-            marcaHora.idEmpleado = data.idEmpleado;
+           
+                        console.log('IDE EMPLEADO !!!', id_empleado)
+            marcaHora.idEmpleado = id_empleado;
             marcaHora.idEmpresa = data.idEmpresa;
             marcaHora.marcaH1 = fechaTest;
             marcaHora.marcaH2 = '';
@@ -359,24 +486,39 @@ function registrarMarcaHora(req, res) {
                                             ///////////////////////CALCULAMOS LOS MINUTOS Y HORAS DE RETRASO MEDIO DIA //////////////////////////////
                                             console.log('hora retraso111', hora_retraso)
                                             console.log('minu retraso22222', min_retraso)
-                                            HistorialMinutosRetraso.find({ idEmpleado: idEmpleado }).exec((err, resultfinal) => {
+                                            var sumMin ,sumHora;
+                                            HistorialMinutosRetraso.find({ idEmpleadoPlanilla: id_empleado,mes:mes }).exec((err, resultfinal) => {
                                                 if (err) {
-
                                                 } else {
-
                                                     if (!resultfinal) {
-                                                       console.log('neli')
+                                                        /**
+                                                         * SUMAMOS LOS MINUTOS MENSUALES DE RETRASO
+                                                         */
+                                                        for (const item in resultfinal) {
+                                                            sumMin=min_retraso+ resultfinal[item].minutosRetraso;
+                                                            sumHora=hora_retraso+ resultfinal[item].horasRetraso;
+                                                            
+                                                            
+                                                        }
+                                                        HistorialMinutosRetraso.findOneAndUpdate({ idEmpleadoPlanilla: id_empleado,mes:mes }, { $set: { minutosRetraso: sumMin,horasRetraso:sumHora } }, { multi: true }, (err, activo_edit) => {
+                                                            console.log("EDITADO !!!!")
+                                                        })
                                                     }
                                                     else {
-                                                        console.log('test!!!!!!!!!!!!!!!!!')
+                                                        /**
+                                                         * 
+                                                         */
+                                                        console.log(id_empleado)
                                                         var historialMinutosRetraso = new HistorialMinutosRetraso();
                                                         historialMinutosRetraso.minutosRetraso=min_retraso
                                                         historialMinutosRetraso.horasRetraso=hora_retraso
-                                                        historialMinutosRetraso.mes='asd'
-                                                        historialMinutosRetraso.idEmpleado='asd'
+                                                        historialMinutosRetraso.mes='1'
+                                                        historialMinutosRetraso.año='2021'
+                                                        historialMinutosRetraso.idEmpleadoPlanilla=id_empleado
                                                         historialMinutosRetraso.save((err, marcaHora_save) => {
                                                             if (marcaHora_save) {
-                                                                //res.status(200).send({message:'OK !!'})
+                                                                    console.log("PERFECTO !!!!")
+                                                               // res.status(200).send({message:'OK !!'})
                                                                 //res.status(200).send({empresas:empresaLista});
                                                             } else {
 
@@ -414,43 +556,7 @@ function registrarMarcaHora(req, res) {
     // // // // //     console.log('MANDAMOS mes ', empleadoMH.mes)
     // // // // //     console.log('MANDAMOS AÑO ', empleadoMH.anio)
     // // // // //     console.log('id', id_calendario)
-    //LISTAMOS LOS DIAS DEL MES Y SUS RESPECTIVOS HORARIOS
-    // //     EmpresaHorarioCalendario.find({ idEmpresaHorario: id_calendario }).sort({ fecha: 'asc' }).exec((err, horario_calenda) => {
-    // //         //console.log('result2', horario_calenda)
-    // //         for (const item in horario_calenda) {
-    // //             console.log('Mostramos todas los ids del mes calendario TIPO horario', horario_calenda[item].idTipoHorario);
-    // //             console.log('Mostramos todas las fechas del mes calendario', horario_calenda[item].fecha);
-    // //             console.log('Mostramos todas los dias calendario', horario_calenda[item].dia);
-    // //             console.log('año solo', horario_calenda[item].fecha.getDate());
-    // //         }
-    // //     })
-    // // })
-    // var fecha1 = marcah1.getDate() + '-' + (marcah1.getMonth() + 1) + '-' + marcah1.getFullYear();
-    // var fecha2 = marcah2.getDate() + '-' + (marcah2.getMonth() + 1) + '-' + marcah2.getFullYear();
-    // var fecha3 = marcah3.getDate() + '-' + (marcah3.getMonth() + 1) + '-' + marcah3.getFullYear();
-    // var fecha4 = marcah4.getDate() + '-' + (marcah4.getMonth() + 1) + '-' + marcah4.getFullYear();
-    // var HORA1 = marcah1.getHours() + '(Hr.)' + (marcah1.getMinutes()) + '(Min.)' + marcah1.getSeconds() + '(Seg.)';
-    // var HORA2 = marcah2.getHours() + '(Hr.)' + (marcah2.getMinutes()) + '(Min.)' + marcah2.getSeconds() + '(Seg.)';
-    // var HORA3 = marcah3.getHours() + '(Hr.)' + (marcah3.getMinutes()) + '(Min.)' + marcah3.getSeconds() + '(Seg.)';
-    // var HORA4 = marcah4.getHours() + '(Hr.)' + (marcah4.getMinutes()) + '(Min.)' + marcah4.getSeconds() + '(Seg.)';
-    // var fechaHora1 = HORA1
-    // var fechaHora2 = HORA2
-    // var fechaHora3 = HORA3
-    // var fechaHora4 = HORA4
-    // marcaHora.idEmpleado = data.idEmpleado;
-    // marcaHora.idEmpresa = data.idEmpresa;
-    // marcaHora.marcaH1 = fechaHora1;
-    // marcaHora.marcaH2 = fechaHora2;
-    // marcaHora.marcaH3 = fechaHora3;
-    // marcaHora.marcaH4 = fechaHora4;
-    // marcaHora.save((err, marcaHora_save) => {
-    //     if (marcaHora_save) {
-    //         //console.log(marcaHora_save)
-    //         res.status(200).send({ marcaHora: marcaHora_save });
-    //     } else {
-    //         res.status(500).send(err);
-    //     }
-    // });
+
 }
 function getMarcaHoraEmpleado(req, res) {
 
