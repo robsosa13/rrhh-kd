@@ -1,10 +1,16 @@
 var EmpleadoPlanilla = require('../models/empleadoPlanilla');
 
 function registrarEmpleadoPlanilla(req, res) {
-
     var data = req.body;
         var empleadoP = new EmpleadoPlanilla();
         empleadoP.idusuario = data.idusuario;
+        empleadoP.nombres = data.nombres;
+        empleadoP.apellidoP = data.apellidoP;
+        empleadoP.apellidoM = data.apellidoM;
+        empleadoP.CI = data.CI;
+        empleadoP.exp = data.exp;
+        empleadoP.fecha_nacimiento = data.fecha_nacimiento;
+        empleadoP.sexo = data.sexo;
         empleadoP.ocupacion = data.ocupacion;
         empleadoP.fecha_ingreso = data.fecha_ingreso;
         empleadoP.fecha_salida = '';

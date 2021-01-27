@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var Schema =    mongoose.Schema;
  
 var MarcaHora = Schema({
-    idEmpleado:String,
+    //idEmpleado:String,
+    idEmpleado: {type: Schema.ObjectId, ref: 'empleadoPlanilla'},
     idEmpresa:String,
     marcaH1:Date,
     marcaH2:Date,

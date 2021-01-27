@@ -20,7 +20,7 @@ function registrarMarcaHora(req, res) {
     var HORA1 = fechaTest.getHours() + '(Hr.)' + (fechaTest.getMinutes()) + '(Min.)' + fechaTest.getSeconds() + '(Seg.)';
     //VERIFICAR QUE HORARIO LE TOCA MARCAR
     var buscar = fechaTest.getDate() + fechaTest.getMonth() + 1 + fechaTest.getFullYear();
-    MarcaHora.find({ fechaRegistro: buscar }).exec((err, MarcaHoraEmpleado) => {
+    MarcaHora.find({ fechaRegistro: buscar,idEmpleado:id_empleado }).exec((err, MarcaHoraEmpleado) => {
         // console.log('aqui termin', MarcaHoraEmpleado)
         if (MarcaHoraEmpleado != '') {
             for (const item in MarcaHoraEmpleado) {
@@ -560,7 +560,7 @@ function registrarMarcaHora(req, res) {
 }
 function getMarcaHoraEmpleado(req, res) {
 
-    MarcaHora.find({}).exec((err, empleadoMH) => {
+    MarcaHora.find({}).populate('idEmpleado').exec((err, empleadoMH) => {
         if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
         if (!empleadoMH) { return res.status(404).send({ message: 'No hay tipoHorario' }); }
         return res.status(200).send({ empleadoMH });
