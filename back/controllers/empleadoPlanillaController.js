@@ -7,7 +7,8 @@ function registrarEmpleadoPlanilla(req, res) {
         empleadoP.idusuario = data.idusuario;
         empleadoP.ocupacion = data.ocupacion;
         empleadoP.fecha_ingreso = data.fecha_ingreso;
-        empleadoP.fecha_salida = data.fecha_salida;
+        empleadoP.fecha_salida = '';
+        empleadoP.haber_basico = data.haber_basico;
         empleadoP.save((err, empleado_result) => { 
             if (err) {
                 res.status(500).send({ message: 'Error en el servidor' });

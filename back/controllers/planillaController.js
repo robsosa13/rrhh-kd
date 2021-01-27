@@ -13,6 +13,7 @@ function registrarPlanilla(req, res) {
     var fecha = new Date(), mes = fecha.getMonth() + 1, año = fecha.getFullYear();
     var bono_antiguedad;
     var anios_antiguedad
+    var haber_basico
     var minutos_retraso, horas_retraso, total_minutos;
     HistorialMinutosRetraso.find({ idEmpleadoPlanilla: params.idEmpleadoPlanilla, mes: mes, año: año }).exec((err, resultado) => {
         if (resultado) {
@@ -32,66 +33,117 @@ function registrarPlanilla(req, res) {
                 var test = moment("20111031", "YYYYMMDD").fromNow();
                 console.log('TST', parseInt(test));
                 // var anios_antiguedad = 
-                Empleado_planilla.find({id:id_empleadoP}).exec((err,data_empleadoP) =>{
-                    if(data_empleadoP){
+                Empleado_planilla.find({ id: id_empleadoP }).exec((err, data_empleadoP) => {
+                    if (data_empleadoP) {
                         for (const item in data_empleadoP) {
-
+                            var anio,mes,dia;
+                            anio=data_empleadoP[item].fecha_ingreso.getFullYear();
+                            mes=data_empleadoP[item].fecha_ingreso.getMonth()+1;
+                            dia=data_empleadoP[item].fecha_ingreso.getDate();
+                            haber_basico = data_empleadoP[item].haber_basico
                             var fecha1 = moment('2016-07-12');
                             var fecha2 = moment('2016-08-01');
                             console.log(fecha2.diff(fecha1, 'days'), ' dias de diferencia');
-                            anios_antiguedad=fecha.getFullYear()  
+                            anios_antiguedad = fecha.getFullYear()
+                            //VERIFICAR  !!!
+                            /*
+                            - haber basico front
+                            - antiguedad
+                            - moment
+                            - disenio pdf boleta de pago y planilla
+                            - sucursales
+                            - empleados'
+                            - editar
+                            - planilla tributaria
+                            - listar por sucursal 
+                            - listar por empleado 
+                             */
+
+                            var AFP = 0, descuentosPOrRetraso = 0, descuento_retraso = 0, PagoDiasTrabajados = 0, TOTALganado = 0, IMPORTEHorasExtras = 0;
+                            //Total dias pagados
+                            //#region CALCULOS
+                            if (params.horas_extras == 0 || params.horas_extras == null) {
+                                IMPORTEHorasExtras = 0;
+                            } else {
+                                IMPORTEHorasExtras = ((((haber_basico / 30) / 8) * 2) * params.horas_extras);
+                            }
+                            if(anios_antiguedad<2){
+                                bono_antiguedad=0;
+                            }
+                            if(anios_antiguedad>=2 && anios_antiguedad<=4){
+                                bono_antiguedad= 318.3;
+                            }else{
+                                if(anios_antiguedad>=5 && anios_antiguedad<=7){
+                                    bono_antiguedad= 700.26;
+                                }else{
+                                    if(anios_antiguedad>=8 && anios_antiguedad<=10){
+                                        bono_antiguedad= 1145.88;
+                                    }else{
+                                        if(anios_antiguedad>=11 && anios_antiguedad<=14){
+                                            bono_antiguedad= 1655.16;
+                                        }else{
+                                            if(anios_antiguedad>=15 && anios_antiguedad<=19){
+                                                bono_antiguedad= 2164.44;
+                                            }else{
+                                                if(anios_antiguedad>=20 && anios_antiguedad<=24){
+                                                    bono_antiguedad= 2673.72;
+                                                }else{
+                                                    bono_antiguedad = 3183;
+                                                }
+                                            }
+            
+                                        }
+                                    }
+                                }
+                            }
+                            PagoDiasTrabajados = ((haber_basico / 30) * params.dias_pagados);
+                            TOTALganado = parseInt(haber_basico) + parseInt(params.otros_bonos) + parseInt(params.bono_produccion) +
+                                parseInt(IMPORTEHorasExtras) + bono_antiguedad;
+                            console.log('TOTAL GANADO', TOTALganado)
+                            descuento_retraso = (((TOTALganado / 30) / 8) / 60);
+                            console.log('descuento_retraso GANADO', descuento_retraso)
+                            console.log('minutos GANADO', total_minutos)
+                            descuentosPOrRetraso = descuento_retraso * total_minutos;
+                            console.log('descuento por retraso', parseInt(descuentosPOrRetraso))
+                            // console.log('descuento por retraso',descuentosPOrRetraso)
+                            AFP = (TOTALganado * 12.71) / 100;
+                            TOTALdescuentos = AFP + parseInt(params.aporte_nal_solidario) + parseInt(params.anticipos) + parseInt(params.otros_descuentos) + parseInt(descuentosPOrRetraso);
+                            //#endregion
+                            planilla.idPlanillaMayor = params.idPlanillaMayor;
+                            planilla.idEmpleadoPlanilla = params.idEmpleadoPlanilla;
+                            planilla.idusuario = 'asd';//params.idusuario;
+                            planilla.ocupacion = params.ocupacion;
+                            planilla.fecha_ingreso = params.fecha_ingreso;
+                            planilla.dias_pagados = params.dias_pagados;
+                            planilla.haber_basico = haber_basico;
+                            planilla.total_dias_pagados = PagoDiasTrabajados;
+                            planilla.bono_antiguedad = bono_antiguedad;
+                            planilla.horas_extras = params.horas_extras;
+                            planilla.importe_horas_extras = IMPORTEHorasExtras;
+                            planilla.bono_produccion = params.bono_produccion;
+                            planilla.otros_bonos = params.otros_bonos;
+                            planilla.total_ganado = TOTALganado;
+                            planilla.monto_afp = AFP;
+                            planilla.aporte_nal_solidario = params.aporte_nal_solidario;
+                            planilla.rc_iva = params.rc_iva;
+                            planilla.anticipos = params.anticipos;
+                            planilla.otros_descuentos = params.otros_descuentos;
+                            planilla.total_descuentos = TOTALdescuentos;
+                            planilla.liquido_pagable = TOTALganado - TOTALdescuentos;
+                            planilla.minutos_retraso = total_minutos;
+                            planilla.save((err, planilla_result) => {
+                                if (err) { return res.status(500).send({ message: "Error al guardar los datos" }) }
+                                if (!planilla_result) { return res.status(404).send({ message: "No se guardo correctamente la planilla" }) }
+                                return res.status(200).send({ planilla: planilla_result })
+                            })
+
+
+
 
                         }
                     }
                 })
-                var AFP = 0, descuentosPOrRetraso = 0, descuento_retraso = 0, PagoDiasTrabajados = 0, TOTALganado = 0, IMPORTEHorasExtras = 0;
-                //Total dias pagados
-                //#region CALCULOS
-                if (params.horas_extras == 0 || params.horas_extras == null) {
-                    IMPORTEHorasExtras = 0;
-                } else {
-                    IMPORTEHorasExtras = ((((params.haber_basico / 30) / 8) * 2) * params.horas_extras);
-                }
-                PagoDiasTrabajados = ((params.haber_basico / 30) * params.dias_pagados);
-                TOTALganado = parseInt(params.haber_basico) + parseInt(params.otros_bonos) + parseInt(params.bono_produccion) +
-                    parseInt(IMPORTEHorasExtras) + parseInt(params.bono_antiguedad);
-                console.log('TOTAL GANADO', TOTALganado)
-                descuento_retraso = (((TOTALganado / 30) / 8) / 60);
-                console.log('descuento_retraso GANADO', descuento_retraso)
-                console.log('minutos GANADO', total_minutos)
-                descuentosPOrRetraso = descuento_retraso * total_minutos;
-                console.log('descuento por retraso', parseInt(descuentosPOrRetraso))
-                // console.log('descuento por retraso',descuentosPOrRetraso)
-                AFP = (TOTALganado * 12.71) / 100;
-                TOTALdescuentos = AFP + parseInt(params.aporte_nal_solidario) + parseInt(params.anticipos) + parseInt(params.otros_descuentos) + parseInt(descuentosPOrRetraso);
-                //#endregion
-                planilla.idPlanillaMayor = params.idPlanillaMayor;
-                planilla.idEmpleadoPlanilla = params.idEmpleadoPlanilla;
-                planilla.idusuario = 'asd';//params.idusuario;
-                planilla.ocupacion = params.ocupacion;
-                planilla.fecha_ingreso = params.fecha_ingreso;
-                planilla.dias_pagados = params.dias_pagados;
-                planilla.haber_basico = params.haber_basico;
-                planilla.total_dias_pagados = PagoDiasTrabajados;
-                planilla.bono_antiguedad = params.bono_antiguedad;
-                planilla.horas_extras = params.horas_extras;
-                planilla.importe_horas_extras = IMPORTEHorasExtras;
-                planilla.bono_produccion = params.bono_produccion;
-                planilla.otros_bonos = params.otros_bonos;
-                planilla.total_ganado = TOTALganado;
-                planilla.monto_afp = AFP;
-                planilla.aporte_nal_solidario = params.aporte_nal_solidario;
-                planilla.rc_iva = params.rc_iva;
-                planilla.anticipos = params.anticipos;
-                planilla.otros_descuentos = params.otros_descuentos;
-                planilla.total_descuentos = TOTALdescuentos;
-                planilla.liquido_pagable = TOTALganado - TOTALdescuentos;
-                planilla.minutos_retraso = total_minutos;
-                planilla.save((err, planilla_result) => {
-                    if (err) { return res.status(500).send({ message: "Error al guardar los datos" }) }
-                    if (!planilla_result) { return res.status(404).send({ message: "No se guardo correctamente la planilla" }) }
-                    return res.status(200).send({ planilla: planilla_result })
-                })
+               
             }
         } else {
             console.log('error')
