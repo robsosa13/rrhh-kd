@@ -21,7 +21,6 @@ function registrarPlanilla(req, res) {
     var aporte_nacional_solidario
     var haber_basico
     var minutos_retraso, horas_retraso, total_minutos;
-
     HistorialMinutosRetraso.find({ idEmpleadoPlanilla: params.idEmpleadoPlanilla, mes: mes, año: año }).exec((err, resultado) => {
       
             if (resultado) {
@@ -189,12 +188,7 @@ function registrarPlanilla(req, res) {
             } else {
                res.status(403).send({message:'NO EXISTEN REGISTROS DE MARCADO DE HORAS'})
             }
-        
-       
-
     })
-
-
 }
 function getPlanilla(req, res) {
     PlanillaSueldos.find({}).populate('idPlanillaMayor').populate('idEmpleadoPlanilla').exec((err, planillas) => {
@@ -202,18 +196,14 @@ function getPlanilla(req, res) {
         if (!planillas) { return res.status(404).send({ message: 'No hay planillas' }); }
         return res.status(200).send({ planillas });
     })
-
 }
-
-
 function getPlanillaId(req, res) {
     var idPlanillaMayor = req.params['id'];
-    PlanillaSueldos.find({ idPlanillaMayor: idPlanillaMayor }).populate('idPlanillaMayor').populate('idEmpleadoPlanilla').exec((err, planillas) => {
+    PlanillaSueldos.find({ _id: idPlanillaMayor }).populate('idPlanillaMayor').populate('idEmpleadoPlanilla').exec((err, planillas) => {
         if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
         if (!planillas) { return res.status(404).send({ message: 'No hay planillas' }); }
         return res.status(200).send({ planillas });
     })
-
 }
 function getPlanillaCI(req, res) {
     PlanillaSueldos.find({ CI: new RegExp(CI, 'i') }).exec((err, planilla_result) => {
