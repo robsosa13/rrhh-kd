@@ -5,5 +5,7 @@ var api = express.Router();
 api.post('/planilla/registrar',planillaController.registrarPlanilla);
 api.get('/planillas',planillaController.getPlanilla);
 api.get('/planilla/:id',planillaController.getPlanillaId);
+api.post('/planilla-edit',planillaController.editPlanilla);
 
 module.exports = api;
+ 

@@ -561,6 +561,7 @@ function registrarMarcaHora(req, res) {
 function getMarcaHoraEmpleado(req, res) {
 
     MarcaHora.find({}).populate('idEmpleado').exec((err, empleadoMH) => {
+        console.log(empleadoMH)
         if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
         if (!empleadoMH) { return res.status(404).send({ message: 'No hay tipoHorario' }); }
         return res.status(200).send({ empleadoMH });
