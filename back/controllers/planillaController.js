@@ -184,10 +184,6 @@ function registrarPlanilla(req, res) {
                                 if (!planilla_result) { return res.status(404).send({ message: "No se guardo correctamente la planilla" }) }
                                 return res.status(200).send({ planilla: planilla_result })
                             })
-
-
-
-
                         }
                     }
                 })
@@ -208,6 +204,14 @@ function getPlanilla(req, res) {
 function getPlanillaId(req, res) {
     var idPlanilla = req.params['id'];
     PlanillaSueldos.find({ _id: idPlanilla }).populate('idPlanillaMayor').populate('idEmpleadoPlanilla').exec((err, planillas) => {
+        if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
+        if (!planillas) { return res.status(404).send({ message: 'No hay planillas' }); }
+        return res.status(200).send({ planillas });
+    })
+}
+function getPlanillaIdPlanilla(req, res) {
+    var idPlanillaMayor = req.params['id'];
+    PlanillaSueldos.find({ idPlanillaMayor: idPlanillaMayor }).populate('idPlanillaMayor').populate('idEmpleadoPlanilla').exec((err, planillas) => {
         if (err) { return res.status(500).send({ message: 'Error la devolver los datos' }); }
         if (!planillas) { return res.status(404).send({ message: 'No hay planillas' }); }
         return res.status(200).send({ planillas });
@@ -379,5 +383,5 @@ function deletePlanilla(req, res) {
 
 
 module.exports = {
-    registrarPlanilla, getPlanillaId, getPlanilla, editPlanilla
+    registrarPlanilla, getPlanillaId, getPlanilla, editPlanilla,getPlanillaIdPlanilla
 }
